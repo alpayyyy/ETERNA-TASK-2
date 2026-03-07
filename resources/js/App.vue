@@ -116,11 +116,25 @@ const fetchPosts = async () => {
 // Yazıya tıklandığında çalışacak fonksiyon
 const openPost = async (id) => {
     try {
-        // Tıklanan yazının detaylarını (ve varsa yorumlarını) API'den çek
+        // Eğer daha önce içine girilmiş bir yazı varsa, önce onun kanalından çıkalım
+        if (selectedPost.value) {
+            window.Echo.leave(`post.${selectedPost.value.id}`);
+        }
+
         const response = await axios.get(`/api/posts/${id}`);
         selectedPost.value = response.data;
-        // Sayfanın en üstüne kaydır
         window.scrollTo({ top: 0, behavior: 'smooth' });
+
+        // Yeni yazının özel kanalına abone ol ve backend'deki 'CommentPublished' olayını dinle
+        window.Echo.channel(`post.${id}`)
+            .listen('CommentPublished', (e) => {
+                // Gelen canlı yorumu (e.comment) yorumlar listemize anında ekliyoruz
+                if (!selectedPost.value.comments) {
+                    selectedPost.value.comments = [];
+                }
+                selectedPost.value.comments.push(e.comment);
+            });
+
     } catch (error) {
         console.error('Yazı detayı çekilirken hata oluştu:', error);
     }
