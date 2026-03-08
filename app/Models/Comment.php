@@ -12,16 +12,16 @@ class Comment extends Model
 {
     use HasFactory, SoftDeletes, LogsActivity;
 
-    protected $fillable = [
-        'post_id', 'user_id', 'content', 'is_approved'
-    ];
+    protected $fillable = ['post_id', 'user_id', 'content', 'is_approved'];
 
     public function getActivitylogOptions(): LogOptions
     {
-        return LogOptions::defaults()->logFillable()->logOnlyDirty()->dontSubmitEmptyLogs();
+        return LogOptions::defaults()
+            ->logFillable()
+            ->logOnlyDirty()
+            ->dontSubmitEmptyLogs();
     }
 
-    // İlişkiler
     public function post() { return $this->belongsTo(Post::class); }
     public function user() { return $this->belongsTo(User::class); }
 }

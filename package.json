@@ -20,6 +20,11 @@
         "vite": "^7.0.7"
     },
     "dependencies": {
-        "vue": "^3.5.29"
+        "vee-validate": "^4.15.1",
+        "vue": "^3.5.29",
+        "vue-router": "^5.0.3",
+        "vue-select": "^4.0.0-beta.6",
+        "vue-the-mask": "^0.11.1",
+        "yup": "^1.7.1"
     }
 }

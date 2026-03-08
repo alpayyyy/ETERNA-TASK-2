@@ -7,19 +7,17 @@ use App\Models\Post;
 
 class DeleteUncommentedPosts extends Command
 {
-    // Terminalden çalıştıracağımız komutun adı
     protected $signature = 'posts:cleanup-uncommented';
 
-    // Komutun ne işe yaradığını anlatan açıklama
-    protected $description = 'Bir hafta boyunca hiç yorum almayan yazıları otomatik olarak siler (Soft Delete)';
+    protected $description = 'Bir hafta boyunca hiç yorum almayan yayınlanmış yazıları otomatik olarak siler (Soft Delete)';
 
     public function handle()
     {
         // Şu anki zamandan 7 gün öncesini alıyoruz
         $oneWeekAgo = now()->subDays(7);
 
-        // 7 günden eski olan VE hiç yorumu olmayan yazıları buluyoruz
-        $postsToDelete = Post::where('created_at', '<=', $oneWeekAgo)
+        // 7 günden eski olan ve hiç yorumu olmayan "yayınlanmış" yazıları buluyoruz
+        $postsToDelete = Post::where('published_at', '<=', $oneWeekAgo)
             ->whereDoesntHave('comments')
             ->get();
 
